@@ -16,8 +16,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", "AUTHORIZATION_ENDPOINT", '"https://devconsole-mid.mimik.com"'
-        buildConfigField "String", "CLIENT_ID", '"<YOUR_CLIENT_ID>"'
-        buildConfigField "String", "DEVELOPER_ID_TOKEN", '"<YOUR_DEVELOPER_ID_TOKEN>"'
+        buildConfigField "String", "CLIENT_ID", '"cde770c1-75a7-47b6-9582-98c30523b174"'
+        buildConfigField "String", "DEVELOPER_ID_TOKEN", '"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik80d0NjU0FFMkxkX1VTR3ZSNjdmU18yQlNuZGhuYjFxb2YyY2trUlAyVE0ifQ.eyJzdWIiOiIzMjcyMTAwMTU2MTI3ODQyMzA0IiwiZW1haWwiOiIzMjcyMTAwMTU2MTI3ODQyMzA0QGV4YW1wbGUuY29tIiwiYXVkIjoiY2RlNzcwYzEtNzVhNy00N2I2LTk1ODItOThjMzA1MjNiMTc0IiwiZXhwIjoxNzI5NDA2NTI5LCJpYXQiOjE3MjY4MTQ1MjksImlzcyI6Imh0dHBzOi8vZGV2Y29uc29sZS1taWQubWltaWsuY29tIn0.uDosD12jLF3ll3-AbVgskxs9qoAIf0lDs122HF6iz98saE2TfTkETzLMNvXZC0a1fG18fmV9QpyWQ8dotJ0_-69ZohtuSBdNV7_UQj33QMpdnomTgP5uTYtLoiRVG-teCcUP8vlvJRoQUfUWCPRfivHEOCfeCe3lytjCk15kQTSxcoGMFnNwB3KxW9ZQsBWUWI5DZYY9QoOivzajOpSHQXY0Xrftzs9DyNNt89DSZmdIZyJlzrPAUTELiRfp4elrZm4l4O4wtqeweWCdzopvCqucHlfC9f7lEB8cjdTyH8Z9SgTgioa9df5cCjig1O8pKY6eohcIENbPXfeR0RKUbg"'
     }
 
     buildTypes {
@@ -46,4 +46,6 @@ dependencies {
 
     implementation 'com.mimik.edgesdk-android-client:edgemobileclient-core-developer:0.3.10.1'
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
+
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.14'
 }

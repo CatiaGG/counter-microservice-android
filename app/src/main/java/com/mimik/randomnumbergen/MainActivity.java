@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     String randomNumberRoot;
     Button getButton;
 
+    // Called when the application is created
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         getButton.setOnClickListener(this::onGetClicked);
     }
 
+    // The code that will get and start the edgeEngine Runtime
     private void startEdge() {
         if (edgeMobileClient.startEdgeSynchronously()) { // Start edgeEngine runtime
             runOnUiThread(() -> {
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         "edgeEngine started!",
                         Toast.LENGTH_LONG).show();
             });
-            authorizeEdge();
+            authorizeEdge(); //to get an Access Token to use to deploy the edge microservice
         } else {
             runOnUiThread(() -> {
                 Toast.makeText(
@@ -71,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // The code that will get the Access Token that's necessary to work
+    // with the edge microservice running under the edgeEngine Runtime
     private void authorizeEdge() {
         // Get the DEVELOPER_ID_TOKEN from the BuildConfig settings
         String developerIdToken = BuildConfig.DEVELOPER_ID_TOKEN;
@@ -127,11 +131,14 @@ public class MainActivity extends AppCompatActivity {
                         // Deploy edge microservice now that an access token
                         // has been generated
                         deployRandomNumberMicroservice();
+                        //deployCounterMicroservice();
                     }
                 }
         );
     }
 
+    // The code that will deploy the edge microservice under the
+    // edgeEngine Runtime
     private void deployRandomNumberMicroservice() {
 
         // Create microservice deployment configuration, dependent
@@ -139,20 +146,20 @@ public class MainActivity extends AppCompatActivity {
         MicroserviceDeploymentConfig config = new MicroserviceDeploymentConfig();
 
         // set the name that will represent the microservice
-        config.setName("randomnumber-v1");
+        config.setName("microservice-v1");
 
         // Get the tar file that represents the edge microservice
         //but stored in the project's file system as a Gradle resource
-        config.setResourceStream(getResources().openRawResource(R.raw.randomnumber_v1));
+        config.setResourceStream(getResources().openRawResource(R.raw.microservice_v1));
 
         // Set the filename that by which the edge client will identify
         // the microservice internally. This filename is associated internally
         // with the resource stream initialized above
-        config.setFilename("randomnumber_v1.tar");
+        config.setFilename("microservice_v1.tar");
 
         // Declare the URI by  which the application code will access
         // the microservice
-        config.setApiRootUri(Uri.parse("/randomnumber/v1"));
+        config.setApiRootUri(Uri.parse("/api/v1"));
 
         // Deploy edge microservice using the client library instance variable
         MicroserviceDeploymentStatus status =
@@ -180,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Called with the Get Random Number is clicked
     private void onGetClicked(View view) {
         if (randomNumberRoot == null || edgeMobileClient.getEdgePort() == -1) {
             Toast.makeText(
@@ -192,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(String.format(
-                        "http://127.0.0.1:%d%s/randomNumber",
+                        "http://127.0.0.1:%d%s/", //http://127.0.0.1:%d%s/randomNumber
                         // use the client to get the default localhost port
                         edgeMobileClient.getEdgePort(),
                         randomNumberRoot)) // root URI determined by microservice deployment
