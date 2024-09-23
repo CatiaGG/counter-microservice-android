@@ -27,9 +27,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
-
-
-import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
     EdgeMobileClient edgeMobileClient;
@@ -130,8 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // Deploy edge microservice now that an access token
                         // has been generated
-                        deployRandomNumberMicroservice();
-                        //deployCounterMicroservice();
+                        deployCounterMicroservice();
                     }
                 }
         );
@@ -139,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
     // The code that will deploy the edge microservice under the
     // edgeEngine Runtime
-    private void deployRandomNumberMicroservice() {
+    private void deployCounterMicroservice() {
 
         // Create microservice deployment configuration, dependent
         // on microservice implementation
@@ -187,6 +185,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private int counterValue = 0;  // Variabile per salvare il valore corrente del contatore
+
     // Called with the Get Random Number is clicked
     private void onGetClicked(View view) {
         if (randomNumberRoot == null || edgeMobileClient.getEdgePort() == -1) {
@@ -200,10 +200,11 @@ public class MainActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(String.format(
-                        "http://127.0.0.1:%d%s/", //http://127.0.0.1:%d%s/randomNumber
+                        "http://127.0.0.1:%d%s/counter?counter=%d", //http://127.0.0.1:%d%s/
                         // use the client to get the default localhost port
                         edgeMobileClient.getEdgePort(),
-                        randomNumberRoot)) // root URI determined by microservice deployment
+                        randomNumberRoot,
+                        counterValue)) // root URI determined by microservice deployment
                 .build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -233,17 +234,31 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     });
                 } else {
+
+                    // Salva il corpo della risposta in una variabile
+                    String responseBody = response.body().string();
+
                     // Display microservice response
                     runOnUiThread(() -> {
-                        try {
+                        //try {
                             Toast.makeText(
                                     MainActivity.this,
-                                    "Got " + response.body().string(),
+                                    "Got " + responseBody,
                                     Toast.LENGTH_LONG).show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        //} catch (IOException e) {
+                            //e.printStackTrace();
+                       // }
                     });
+
+                    // Estrae il valore del contatore dalla stringa e lo salva in counterValue
+                    String regex = "\\d+";
+                    Pattern pattern = Pattern.compile(regex);
+                    Matcher matcher = pattern.matcher(responseBody);
+
+                    if (matcher.find()) {
+                        counterValue = Integer.parseInt(matcher.group());
+                    }
+
                 }
             }
         });
